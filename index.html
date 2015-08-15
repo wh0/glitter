@@ -1,0 +1,48 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Leckerli+One">
+<body>
+<p><input oninput="document.getElementById('text').textContent = this.value;" value="glitter"></p>
+<svg width="100%" height="300">
+	<!-- main colors -->
+	<linearGradient id="co" x1="0%" y1="0" x2="0%" y2="100%">
+		<stop offset="0%" stop-color="#f05" />
+		<stop offset="50%" stop-color="#d4d" />
+		<stop offset="100%" stop-color="#50f" />
+	</linearGradient>
+	<!-- specular-ish lighting effect -->
+	<radialGradient id="gr" gradientTransform="matrix(1 0 0 10 0 -4.5)">
+		<stop offset="3%" stop-color="rgba(255,255,255,1)" />
+		<stop offset="13%" stop-color="rgba(255,255,255,0)" />
+		<stop offset="13%" stop-color="rgba(0,0,0,0)" />
+		<stop offset="100%" stop-color="rgba(0,0,0,0.75)" />
+	</radialGradient>
+	<!-- lightmap server, animated rotation -->
+	<pattern id="pa" width="256" height="256" patternUnits="userSpaceOnUse">
+		<animateTransform attributeName="patternTransform" type="translate" to="256" dur="6s" repeatCount="indefinite" />
+		<rect x="0" y="0" width="256" height="256" fill="url(#gr)" />
+	</pattern>
+	<!-- the main glitter -->
+	<filter id="di">
+		<!-- build some noise -->
+		<!-- does the renderer cache this? -->
+		<feTurbulence baseFrequency="0.35" numOctaves="2" type="fractalNoise" />
+		<feComponentTransfer>
+			<feFuncB type="linear" slope="0" />
+			<!-- man, why does the turbulence have random alpha? -->
+			<feFuncA type="linear" slope="0" intercept="1" />
+		</feComponentTransfer>
+		<!-- ideally, we would have pixel noise, but all we have is turbulence, which isn't uniformly distributed -->
+		<!-- so therefore the scale is a huge number. I suspect this is part of the performance problem -->
+		<!-- no idea how to get other paint servers into a fiilter, so it's shoehorned in as the stroke paint -->
+		<!-- but that means you can't actually configure the stroke -->
+		<feDisplacementMap in="StrokePaint" scale="768" xChannelSelector="R" yChannelSelector="G" />
+		<!-- paint the inside -->
+		<feComposite in2="SourceGraphic" result="front" operator="atop" />
+		<!-- add the border. we're lucky black always looks good -->
+		<feMorphology in="SourceAlpha" operator="dilate" radius="3 6" />
+		<feOffset dy="3" />
+		<feComposite in="front" />
+	</filter>
+	<text id="text" x="50" y="175" font-size="150" font-family="Leckerli One" fill="url(#co)" stroke="url(#pa)" stroke-width="0" filter="url(#di)">glitter</text>
+</svg>
