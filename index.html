@@ -28,6 +28,8 @@
 		<!-- does the renderer cache this? -->
 		<feTurbulence baseFrequency="0.35" numOctaves="2" type="fractalNoise" />
 		<feComponentTransfer>
+			<feFuncR type="linear" slope="1.25" offset="-0.125" />
+			<feFuncG type="linear" slope="1.25" offset="-0.125" />
 			<feFuncB type="linear" slope="0" />
 			<!-- man, why does the turbulence have random alpha? -->
 			<feFuncA type="linear" slope="0" intercept="1" />
@@ -36,7 +38,7 @@
 		<!-- so therefore the scale is a huge number. I suspect this is part of the performance problem -->
 		<!-- no idea how to get other paint servers into a fiilter, so it's shoehorned in as the stroke paint -->
 		<!-- but that means you can't actually configure the stroke -->
-		<feDisplacementMap in="StrokePaint" scale="768" xChannelSelector="R" yChannelSelector="G" />
+		<feDisplacementMap in="StrokePaint" scale="384" xChannelSelector="R" yChannelSelector="G" />
 		<!-- paint the inside -->
 		<feComposite in2="SourceGraphic" result="front" operator="atop" />
 		<!-- add the border. we're lucky black always looks good -->
