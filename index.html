@@ -68,7 +68,7 @@
 	<g clip-path="url(#fg)">
 		<rect id="r1" width="600" height="188" fill="url(#co)" />
 		<g filter="url(#di)">
-			<rect id="r2" x="-25" y="-16" width="641" height="220" fill="url(#pa)" style="animation:east 6s linear infinite;" />
+			<rect id="r2" x="-48" y="-16" width="664" height="220" fill="url(#pa)" style="animation:east 6s linear infinite;" />
 		</g>
 	</g>
 </svg>
@@ -87,15 +87,16 @@ var r2 = document.getElementById('r2');
 function update() {
 	t1.textContent = input.value;
 	t2.textContent = input.value;
-	var rect = t1.getBoundingClientRect();
-	var width = Math.ceil(rect.right + rect.left);
+	const svgRect = svg.getBoundingClientRect();
+	const rect = t1.getBoundingClientRect();
+	var width = Math.ceil(rect.left - svgRect.left + rect.right - svgRect.left);
 	svg.width.baseVal.value = width;
 	di.width.baseVal.value = width + 32;
 	fet.width.baseVal.value = width;
 	fect.width.baseVal.value = width;
 	fedm.width.baseVal.value = width;
 	r1.width.baseVal.value = width;
-	r2.width.baseVal.value = width + 32 + 9;
+	r2.width.baseVal.value = width + 64;
 	save.href = 'data:image/svg+xml,' + encodeURIComponent(svg.outerHTML);
 }
 input.addEventListener('input', function (e) {
