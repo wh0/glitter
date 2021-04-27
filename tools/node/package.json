@@ -1,0 +1,16 @@
+{
+	"scripts": {
+		"start": "python3 -m http.server $PORT"
+	},
+	"dependencies": {
+		"canvas": "^2.6.1",
+		"rgbquant": "^1.1.2"
+	},
+	"engines": {
+		"node": ">=10"
+	},
+	"glitch": {
+		"projectType": "generated_static",
+		"buildDirectory": "."
+	}
+}

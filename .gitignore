@@ -1,0 +1,11 @@
+# glitch: app user's dotfiles
+/.emacs
+/.emacs.d
+/.lesshst
+
+# private stuff
+/notes.txt
+
+# glitch: link interpreter info to project root
+/package.json
+/shrinkwrap.yaml

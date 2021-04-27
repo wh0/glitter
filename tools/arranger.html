@@ -1,0 +1,50 @@
+<!doctype html>
+<p>🤓</p>
+<script src="shared.js"></script>
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.127.0/build/three.module.js';
+import {OrbitControls} from 'https://unpkg.com/three@0.127.0/examples/jsm/controls/OrbitControls.js';
+
+const J = 256;
+const palette = [];
+const position = [];
+const color = [];
+for (let j = 0; j < J; j++) {
+	const [nx, ny, nz] = chooseNormal(j, J);
+
+	position.push(nx, ny, nz);
+	color.push(1, j / (J - 1), 0);
+	// color.push(nx / 2 + 0.5, ny / 2 + 0.5, nz / 2 + 0.5);
+
+	const r = Math.round((nx + 1) * 127.5);
+	const g = Math.round((ny + 1) * 127.5);
+	const b = Math.round((nz + 1) * 127.5);
+	palette.push([r, g, b]);
+}
+console.log(JSON.stringify(palette));
+
+const scene = new THREE.Scene();
+const geometry = new THREE.BufferGeometry();
+geometry.setAttribute('position', new THREE.Float32BufferAttribute(position, 3));
+geometry.setAttribute('color', new THREE.Float32BufferAttribute(color, 3));
+scene.add(new THREE.Line(geometry, new THREE.LineBasicMaterial({
+	color: 0x808080,
+})));
+scene.add(new THREE.Points(geometry, new THREE.PointsMaterial({
+	size: 5,
+	vertexColors: true,
+})));
+
+const camera = new THREE.OrthographicCamera(-1.1, 1.1, 1.1, -1.1, 1, 100);
+camera.position.set(0, 0, 4);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(256, 256);
+document.body.appendChild(renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
+
+function draw() {
+	renderer.render(scene, camera);
+	requestAnimationFrame(draw);
+}
+draw();
+</script>

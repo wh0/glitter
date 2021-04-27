@@ -1,0 +1,65 @@
+<!doctype html>
+
+<pre style="white-space: pre;">
+<script src="shared.js"></script>
+<script>
+const v = [0, 0, 1];
+const I = 16;
+const J = 256;
+function d(m) {
+	for (let i = 0; i <= I; i++) {
+		if (i) document.writeln(';');
+
+		// orbit around equator
+		// const lPhi = (i / I * 2 - 1) * Math.PI;
+		// const l = fromSpherical([lPhi, Math.PI / 2]);
+
+		// ring around eye
+		// const lPhi = Math.PI / 3;
+		// const lTheta = i / I * Math.PI * 2;
+		// const l = fromSpherical([lPhi, lTheta]);
+
+		// slightly northern orbit
+		const lPhi = Math.PI / 3;
+		const lTheta = i / I * Math.PI * 2;
+		const [lx, ly, lz] = fromSpherical([lPhi, lTheta]);
+		const l = [lx, lz, ly];
+
+		for (let j = 0; j < J; j++) {
+			if (j) document.write(' ');
+			const n = chooseNormal(j, J);
+			let lit = [0.5, 0];
+			lit = add2(lit, light(v, n, l, 0.5, 1.4, 8));
+			lit = add2(lit, light(v, n, scale(-1, l), 0.5, 1.4, 8));
+
+			const [diffuse, specular] = lit;
+			const shadowStrength = 1 - Math.min(diffuse, 1);
+			const glareStrength = Math.min(specular, 1);
+
+			// const alpha = shadowStrength * (1 - glareStrength) + glareStrength;
+			// const color = glareStrength / (alpha + 0.0001);
+
+			const alpha = Math.abs(glareStrength - shadowStrength);
+			const color = glareStrength > shadowStrength ? 1 : 0;
+
+			// const base = 0.5;
+			// const mixed = (1 - shadowStrength) * base + glareStrength;
+			// const alpha = Math.min(Math.abs(mixed - base) * 2, 1);
+			// const color = mixed > base ? 1 : 0;
+
+			if (m) {
+				document.write(alpha.toFixed(3));
+			} else {
+				document.write(color);
+			}
+			// document.write(`${color.toFixed(3)}/${alpha.toFixed(3)}`);
+		}
+	}
+}
+document.writeln('f');
+d(false);
+document.writeln();
+document.writeln('t');
+d(true);
+</script>
+</pre>
